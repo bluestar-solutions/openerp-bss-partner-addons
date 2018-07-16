@@ -1,39 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
 
-        <record id="view_bluestar_partner_reference_config_form" model="ir.ui.view">
-            <field name="name">bss.partner.reference.config.form</field>
-            <field name="model">bss.partner.reference.config</field>
-            <field name="inherit_id" ref="base.res_config_view_base" />
-            <field name="arch" type="xml">
-                <form position="attributes">
-                    <attribute name="string">Migrate Partner Reference</attribute>
-                </form>
+    <record id="view_bluestar_partner_reference_config_form" model="ir.ui.view">
+        <field name="name">bss.partner.reference.config.form</field>
+        <field name="model">bss.partner.reference.config</field>
+        <field name="inherit_id" ref="base.res_config_view_base"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="string">Migrate Partner Reference</attribute>
+            </form>
+            <group name="res_config_contents" position="replace">
+                <field name="generate_ref"/>
+            </group>
+        </field>
+    </record>
 
-                <group position="replace">
-                <!-- string="res_config_contents" REMOVED -->
-                <!-- TODO: find another way to identify group, string cannot be used in v10.0 -->
-                    <field name="generate_ref" />
-                </group>
-            </field>
-        </record>
+    <record id="action_bss_partner_reference_config" model="ir.actions.act_window">
+        <field name="name">Migrate Partner Reference</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bss.partner.reference.config</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_bluestar_partner_reference_config_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
-        <record id="action_bss_partner_reference_config" model="ir.actions.act_window">
-            <field name="name">Migrate Partner Reference</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">bss.partner.reference.config</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_bluestar_partner_reference_config_form" />
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+    <record id="bss_partner_reference_config_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_bss_partner_reference_config"/>
+        <field name="sequence">200</field>
+        <field name="type">automatic</field>
+    </record>
 
-        <record id="bss_partner_reference_config_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_bss_partner_reference_config"/>
-            <field name="sequence">200</field>
-            <field name="type">automatic</field>
-        </record>
-
-    </data>
-</openerp>
+</odoo>

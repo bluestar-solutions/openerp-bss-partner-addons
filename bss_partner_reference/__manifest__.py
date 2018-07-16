@@ -22,7 +22,9 @@ from existing partners.
     'website': 'http://www.blues2.ch',
     'depends': [],
     'data': [
-        'data/res_partner_data.xml'
+        'data/res_partner_data.xml',
+
+        'views/res_partner_views.xml'
     ],
     'demo': [],
     'test': [],

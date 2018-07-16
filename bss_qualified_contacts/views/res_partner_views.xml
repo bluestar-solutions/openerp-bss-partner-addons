@@ -1,29 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-
-        <record id="res_partner_form_view_inherit_bss_qualified_contacts" model="ir.ui.view">
-            <field name="name">res_partner.form.inherit.bss_qualified_contacts</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form" />
-            <field eval="1" name="priority"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[field[@name='child_ids']]" position="attributes">
-                    <attribute name="string">Structure</attribute>
-                </xpath>
-                <xpath expr="//page[field[@name='child_ids']]" position="after">
-                    <page string="Contacts">
-                        <field name="qualified_contact_rel_ids" widget="one2many_action" context="{'on_click_action': 'open_contact'}">
-                            <tree editable="bottom">
-                                <field name="contact_id" />
-                                <field name="qualifier_id" />
-                                <field name="phone" />
-                                <field name="mobile" />
-                                <button name="open_contact" type="object" invisible="1"/>
-                            </tree>
-                        </field>
-                    </page>
-                </xpath>
+<odoo>
+    <record id="res_partner_form_view_inherit_bss_qualified_contacts"
+        model="ir.ui.view">
+        <field name="name">res_partner.form.inherit.bss_qualified_contacts
+        </field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="before">
+                <span
+                    attrs="{'invisible': ['|', ('type', '!=', 'contact'), ('contact_qualifier_id', '=', False)]}">
+                    <field name="contact_qualifier_id"/>
+                    of
+                </span>
             </field>
-        </record>
-
-</openerp>
+            <xpath expr="//field[@name='child_ids']/form/sheet/group[1]/group[1]"
+                position="attributes">
+                <attribute name="attrs">{}</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='child_ids']/form//div[@class='o_address_format']"
+                position="before">
+                <field name="has_custom_address" attrs="{'invisible': [('type', '!=', 'contact')]}"/>
+                <label for="has_custom_address" attrs="{'invisible': [('type', '!=', 'contact')]}"/>
+                <separator orientation="horizontal"/>
+            </xpath>
+            <xpath
+                expr="//field[@name='child_ids']/form//div[@class='o_address_format']"
+                position="attributes">
+                <attribute name="attrs">{'invisible': [('type', '=',
+                    'contact'), ('has_custom_address', '!=', True)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/form//field[@name='title']"
+                position="before">
+                <field name="contact_qualifier_id" attrs="{'invisible': [('type', '!=', 'contact')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='child_ids']/kanban" position="replace">
+                <kanban>
+                    <field name="color"/>
+                    <field name="name"/>
+                    <field name="contact_qualifier_id"/>
+                    <field name="title"/>
+                    <field name="type"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="is_company"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="has_custom_address"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
+                    <field name="fax"/>
+                    <field name="state_id"/>
+                    <field name="image"/>
+                    <field name="lang"/>
+                                    <!-- fields in form x2many view to diminish requests -->
+                    <field name="comment"/>
+                    <field name="customer"/>
+                    <field name="display_name"/>
+                    <field name="supplier"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                            <div
+                                t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                <a t-if="!read_only_mode" type="delete"
+                                    class="fa fa-times pull-right"/>
+                                <div class="o_kanban_image">
+                                    <img t-if="record.image.raw_value"
+                                        t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                    <t t-if="!record.image.raw_value">
+                                        <img
+                                            t-if="record.type.raw_value === 'delivery'"
+                                            t-att-src='_s + "/base/static/src/img/truck.png"'/>
+                                        <img
+                                            t-if="record.type.raw_value === 'invoice'"
+                                            t-att-src='_s + "/base/static/src/img/money.png"'/>
+                                        <t
+                                            t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                            <img
+                                                t-if="record.is_company.raw_value === true"
+                                                t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                            <img
+                                                t-if="record.is_company.raw_value === false"
+                                                t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div>
+                                        <strong>
+                                            <field name="contact_qualifier_id"
+                                                t-if="record.type.raw_value == 'contact' and record.contact_qualifier_id.raw_value"/>
+                                            <field name="type" t-else=""/>
+                                        </strong>
+                                    </div>
+                                    <field name="name"/>
+                                    <div t-if="record.function.raw_value">
+                                        <field name="function"/>
+                                    </div>
+                                    <div t-if="record.email.raw_value">
+                                        <field name="email"/>
+                                    </div>
+                                    <div
+                                        t-if="record.type.raw_value != 'contact' or record.has_custom_address.raw_value">
+                                        <div>
+                                            <field name="zip"/>
+                                            <field name="city"/>
+                                        </div>
+                                        <field t-if="record.state_id.raw_value"
+                                            name="state_id"/>
+                                        <field name="country_id"/>
+                                    </div>
+                                    <div t-if="record.phone.raw_value">
+                                        Phone:
+                                        <field name="phone"/>
+                                    </div>
+                                    <div t-if="record.mobile.raw_value">
+                                        Mobile:
+                                        <field name="mobile"/>
+                                    </div>
+                                    <div t-if="record.fax.raw_value">
+                                        Fax:
+                                        <field name="fax"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </xpath>
+        </field>
+    </record>
+</odoo>
