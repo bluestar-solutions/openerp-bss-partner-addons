@@ -1,14 +1,13 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* bss_split_partner_name
-#
+# * bss_split_partner_name
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-18 13:17+0000\n"
-"PO-Revision-Date: 2017-10-18 13:54+0200\n"
-"Last-Translator: Hervé <herve.martinet@blues2.ch>\n"
+"POT-Creation-Date: 2018-09-15 09:14+0000\n"
+"PO-Revision-Date: 2018-09-18 14:23+0200\n"
+"Last-Translator: Nicolas <nicolas.beraneck@blues2.ch>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr_CH\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Pootle 2.5.0\n"
-"X-POOTLE-MTIME: 1508331244.0\n"
+"X-POOTLE-MTIME: 1537277010.0\n"
 
 #. module: bss_split_partner_name
 #: model:ir.model.fields,field_description:bss_split_partner_name.field_res_partner_first_name
@@ -41,6 +40,14 @@ msgstr "Nom"
 #: model:ir.ui.view,arch_db:bss_split_partner_name.view_partner_split_simple_form
 msgid "Name"
 msgstr "Nom"
+
+#. module: bss_split_partner_name
+#: code:addons/bss_split_partner_name/models/res_partner.py:46
+#, python-format
+msgid "Name cannot be defined if first name or last name is defined!"
+msgstr ""
+"Le nom ne peut pas être définit si le prénom ou le nom de famille sont "
+"définit !"
 
 #. module: bss_split_partner_name
 #: model:ir.model,name:bss_split_partner_name.model_res_partner
