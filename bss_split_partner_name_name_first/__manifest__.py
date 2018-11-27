@@ -4,7 +4,7 @@
 
 {
     'name': 'Split Partner Name - Name First',
-    'version': '10.0.0.1',
+    'version': '10.0.1.0',
     "category": 'Bluestar/Generic module',
     'complexity': "easy",
     'description': """
