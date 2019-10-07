@@ -9,12 +9,12 @@ from odoo.exceptions import UserError
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    ref = fields.Char('Reference', size=64, index=True, readonly=True)
+    ref = fields.Char(
+        'Reference', size=64, index=True, readonly=True)
 
     @api.model
     def create(self, vals):
-        if 'ref' not in vals:
-            vals['ref'] = self.env['ir.sequence'].get('bss.partner.ref')
+        vals['ref'] = self.env['ir.sequence'].get('bss.partner.ref')
         return super(Partner, self).create(vals)
 
 
@@ -35,24 +35,24 @@ class PartnerReferenceConfig(models.TransientModel):
         self.ensure_one()
         Partner = self.env['res.partner'].with_context(active_test=False)
         Sequence = self.env['ir.sequence']
-        partners = Partner
         if self.generate_ref == 'all':
-            partners += Partner.search([])
+            partners = Partner.search([])
         elif self.generate_ref == 'empty':
-            partners += Partner.search([
+            partners = Partner.search([
                 '|', ('ref', '=', False), ('ref', '=', '')])
+        else:
+            partners = Partner
         for partner in partners:
-            partner.ref = Sequence.next_by_code('bluestar.partner.ref')
+            partner.ref = Sequence.next_by_code('bss.partner.ref')
 
-        partners = Partner.search([
-            '|', ('ref', '=', False), ('ref', '=', '')])
-        if partners:
+        if Partner.search([
+                '|', ('ref', '=', False), ('ref', '=', '')]):
             raise UserError(_("There is empty references !"))
 
         self.env.cr.execute("""
-            SELECT COUNT(ref)
-            FROM res_partner
-            GROUP BY ref
-            HAVING ( COUNT(ref) > 1 )""")
+            select count(ref)
+            from res_partner
+            group by ref
+            having ( count(ref) > 1 )""")
         if self.env.cr.rowcount > 0:
             raise UserError(_('There is duplicates references !'))
